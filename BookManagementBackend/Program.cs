@@ -7,6 +7,7 @@ using BookManagementBackend.Infraestructure.Contexts;
 using BookManagementBackend.Infraestructure.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,7 @@ builder.Services.AddScoped<IBooksReturnRepository, BooksReturnRepository>();
 
 builder.Services.AddDbContext<LibraryContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("LibraryContext"));
+    options.UseMySQL(builder.Configuration.GetConnectionString("LibraryContext") ?? "");
 });
 
 builder.Services.AddCors(options =>
@@ -42,11 +43,20 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<LibraryContext>();
+    context.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+{        
     app.UseCors("AllowEspecificOrigin");
 }
 
