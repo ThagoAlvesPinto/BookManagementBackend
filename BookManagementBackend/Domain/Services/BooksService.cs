@@ -54,7 +54,7 @@ namespace BookManagementBackend.Domain.Services
             return await booksRepository.GetBook(isbn);
         }
 
-        public async Task<bool> ReturnBook(int bookId, string returnUserName)
+        public async Task<(bool,string)> ReturnBook(int bookId, string returnUserName)
         {
             try
             {
@@ -62,11 +62,11 @@ namespace BookManagementBackend.Domain.Services
 
                 await booksReturnRepository.AddBookReturn(booksReturn);
 
-                return true;
+                return (true,"");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return false;
+                return (false,e.Message + " " + e.InnerException?.Message);
             }            
         }
     }

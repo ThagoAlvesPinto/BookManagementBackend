@@ -35,13 +35,15 @@ namespace BookManagementBackend.Controllers
         [HttpPost("Return")]
         public async Task<IActionResult> ReturnBook(BookReturnRequest request)
         {
-            if (await booksService.ReturnBook(request.BookId, request.ReturnUserName))
+            var ret = await booksService.ReturnBook(request.BookId, request.ReturnUserName);
+
+            if (ret.Item1)
             {
                 return Ok("Livro devolvido com sucesso.");
             }
             else
             {
-                return BadRequest("Erro ao devolver livro.");
+                return BadRequest("Erro ao devolver livro. " + ret.Item2);
             }
         }
     }
