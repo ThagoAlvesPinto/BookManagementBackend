@@ -5,6 +5,7 @@ namespace BookManagementBackend.Domain.Interfaces.Repositories
     public interface IBooksRepository
     {
         Task AddBook(Books book);
+        Task<bool> BookExists(string isbn);
         Task DeleteBook(Books book);
         Task<IEnumerable<Books>> GetAllBooks();
         Task<Books?> GetBook(int id);

@@ -2,8 +2,7 @@
 
 namespace BookManagementBackend.Domain.Services
 {
-    public class UserService : IUserService
+    public class TokenService : ITokenService
     {
-        
     }
 }

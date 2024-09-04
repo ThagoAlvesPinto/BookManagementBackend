@@ -41,5 +41,10 @@ namespace BookManagementBackend.Infraestructure.Repositories
             db.Books.Update(book);
             await db.SaveChangesAsync();
         }
+
+        public async Task<bool> BookExists(string isbn)
+        {
+            return await db.Books.AnyAsync(b => b.Isbn10 == isbn || b.Isbn13 == isbn);
+        }
     }
 }
