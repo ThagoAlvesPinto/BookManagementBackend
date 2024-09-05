@@ -59,6 +59,8 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IBooksService, BooksService>();
 builder.Services.AddScoped<IGoogleAPIService, GoogleAPIService>();
 builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 #endregion
 
 #region Repositories

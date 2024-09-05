@@ -6,7 +6,7 @@ namespace BookManagementBackend.Domain.Services.External
     {
         public Task SendEmail(string to, string subject, string body)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }

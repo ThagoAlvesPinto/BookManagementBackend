@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookManagementBackend.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20240409233429_InitialMigration")]
+    [Migration("20240905233721_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -98,18 +98,24 @@ namespace BookManagementBackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsAdministrator")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
 
