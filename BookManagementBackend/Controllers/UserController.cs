@@ -15,10 +15,10 @@ namespace BookManagementBackend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _service;
+        private readonly IUsersService _service;
         private readonly ITokenService _tokenService;
 
-        public UserController(IUserService service, ITokenService tokenService)
+        public UserController(IUsersService service, ITokenService tokenService)
         {
             _service = service;
             _tokenService = tokenService;
@@ -27,19 +27,34 @@ namespace BookManagementBackend.Controllers
         [HttpPost("Login"), AllowAnonymous]
         public async Task<ActionResult<APIResponse<LoginResponse>>> Login(LoginRequest loginRequest)
         {
-            ServiceResult<Users> loginResult = await _service.Login(loginRequest.Email, loginRequest.Senha);
+            ServiceResult<Users> loginResult = await _service.Login(loginRequest.Email ?? "", loginRequest.Password ?? "");
 
-            if (!loginResult.Sucesso || loginResult.Resultado is null)
-                return BadRequest(new APIResponse(false, loginResult.Mensagem));
+            if (loginResult.ExceptionGenerated)
+                return StatusCode(500, new APIResponse(false, loginResult.Message));
 
-            return Ok(new APIResponse<string>(_tokenService.GeraToken(loginResult.Resultado), mensagem: "Login realizado com sucesso!"));
+            if (!loginResult.Success || loginResult.Data is null)
+                return BadRequest(new APIResponse(false, loginResult.Message));
+
+            string token = _tokenService.GenerateToken(loginResult.Data);
+
+            LoginResponse loginResponse = new(loginResult.Data, token);
+
+            return Ok(new APIResponse<LoginResponse>(loginResponse));
         }
 
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<APIResponse<IEnumerable<Users>>>> GetUsers()
         {
-            return new string[] { "value1", "value2" };
+            ServiceResult<IEnumerable<Users>> result = await _service.GetAllUsers();
+
+            if (result.ExceptionGenerated)
+                return StatusCode(500, (APIResponse)result);
+
+            if (!result.Success)
+                return BadRequest((APIResponse)result);
+
+            return Ok((APIResponse)result);
         }
 
         // POST api/User

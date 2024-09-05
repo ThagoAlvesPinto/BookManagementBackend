@@ -5,30 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookManagementBackend.Infraestructure.Repositories
 {
-    public class BooksReturnRepository(LibraryContext _db) : IBooksReturnRepository
+    public class BooksReturnRepository(LibraryContext db) : IBooksReturnRepository
     {
-        private readonly LibraryContext db = _db;
+        private readonly LibraryContext _db = db;
 
         public async Task AddBookReturn(BooksReturn bookReturn)
         {
-            db.BooksReturn.Add(bookReturn);
-            await db.SaveChangesAsync();
+            _db.BooksReturn.Add(bookReturn);
+            await _db.SaveChangesAsync();
         }
 
         public async Task DeleteBookReturn(BooksReturn bookReturn)
         {
-            db.BooksReturn.Remove(bookReturn);
-            await db.SaveChangesAsync();
+            _db.BooksReturn.Remove(bookReturn);
+            await _db.SaveChangesAsync();
         }
 
         public async Task<BooksReturn?> GetBookReturn(int id)
         {
-            return await db.BooksReturn.FindAsync(id);
+            return await _db.BooksReturn.FindAsync(id);
         }
 
         public async Task<IEnumerable<BooksReturn>> GetAllBooksReturnByBook(int bookId)
         {
-            return await db.BooksReturn
+            return await _db.BooksReturn
                 .Where(x => x.BookId == bookId)
                 .Include(x => x.Book)
                 .ToListAsync();

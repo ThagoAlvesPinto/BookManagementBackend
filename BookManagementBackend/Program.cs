@@ -55,7 +55,7 @@ builder.Services.Configure<AppSettings>(settingsSection);
 #endregion
 
 #region Services
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IBooksService, BooksService>();
 builder.Services.AddScoped<IGoogleAPIService, GoogleAPIService>();
 builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
@@ -64,6 +64,7 @@ builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
 #region Repositories
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 builder.Services.AddScoped<IBooksReturnRepository, BooksReturnRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 #endregion
 
 #region Database

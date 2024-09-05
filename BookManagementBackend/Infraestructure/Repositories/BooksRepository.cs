@@ -5,46 +5,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookManagementBackend.Infraestructure.Repositories
 {
-    public class BooksRepository(LibraryContext _db) : IBooksRepository
+    public class BooksRepository(LibraryContext db) : IBooksRepository
     {
-        private readonly LibraryContext db = _db;
+        private readonly LibraryContext _db = db;
 
         public async Task AddBook(Books book)
         {
-            db.Books.Add(book);
-            await db.SaveChangesAsync();
+            _db.Books.Add(book);
+            await _db.SaveChangesAsync();
         }
 
         public async Task DeleteBook(Books book)
         {
-            db.Books.Remove(book);
-            await db.SaveChangesAsync();
+            _db.Books.Remove(book);
+            await _db.SaveChangesAsync();
         }
 
         public async Task<Books?> GetBook(int id)
         {
-            return await db.Books.FindAsync(id);
+            return await _db.Books.FindAsync(id);
         }
 
         public async Task<Books?> GetBook(string isbn)
         {
-            return await db.Books.FirstOrDefaultAsync(b => b.Isbn10 == isbn || b.Isbn13 == isbn);
+            return await _db.Books.FirstOrDefaultAsync(b => b.Isbn10 == isbn || b.Isbn13 == isbn);
         }
 
         public async Task<IEnumerable<Books>> GetAllBooks()
         {
-            return await db.Books.ToListAsync();
+            return await _db.Books.ToListAsync();
         }
 
         public async Task UpdateBook(Books book)
         {
-            db.Books.Update(book);
-            await db.SaveChangesAsync();
+            _db.Books.Update(book);
+            await _db.SaveChangesAsync();
         }
 
         public async Task<bool> BookExists(string isbn)
         {
-            return await db.Books.AnyAsync(b => b.Isbn10 == isbn || b.Isbn13 == isbn);
+            return await _db.Books.AnyAsync(b => b.Isbn10 == isbn || b.Isbn13 == isbn);
         }
     }
 }

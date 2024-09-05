@@ -26,82 +26,82 @@ namespace BookManagementBackend.Controllers
             ServiceResult<Books> result = await booksService.GetBookByIsbn(isbn);
 
             if (result.ExceptionGenerated)
-                return StatusCode(500, result);
+                return StatusCode(500, (APIResponse<Books>)result);
 
             if (!result.Success)
-                return BadRequest(result);
+                return BadRequest((APIResponse<Books>)result);
 
-            return Ok(result);
+            return Ok((APIResponse<Books>)result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBooks()
+        public async Task<ActionResult<APIResponse<IEnumerable<Books>>>> GetBooks()
         {
             ServiceResult<IEnumerable<Books>> result = await booksService.GetBooks();
 
             if (result.ExceptionGenerated)
-                return StatusCode(500, result);
+                return StatusCode(500, (APIResponse<IEnumerable<Books>>)result);
 
             if (!result.Success)
-                return BadRequest(result);
+                return BadRequest((APIResponse<IEnumerable<Books>>)result);
 
-            return Ok(result);
+            return Ok((APIResponse<IEnumerable<Books>>)result);
         }
 
         [HttpGet("External/{isbn}")]
-        public async Task<IActionResult> GetExternalBook(string isbn)
+        public async Task<ActionResult<APIResponse<ExternalBookResponse>>> GetExternalBook(string isbn)
         {
             ServiceResult<ExternalBookResponse> result = await booksService.GetExternalBook(isbn);
 
             if (result.ExceptionGenerated)
-                return StatusCode(500, result);
+                return StatusCode(500, (APIResponse<ExternalBookResponse>)result);
 
             if (!result.Success)
-                return BadRequest(result);
+                return BadRequest((APIResponse<ExternalBookResponse>)result);
 
-            return Ok(result);
+            return Ok((APIResponse<ExternalBookResponse>)result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBook(AddBookRequest book)
+        public async Task<ActionResult<APIResponse>> AddBook(AddBookRequest book)
         {
             ServiceResult ret = await booksService.AddBook(book);
 
             if (ret.ExceptionGenerated)
-                return StatusCode(500, ret);
+                return StatusCode(500, (APIResponse)ret);
 
             if (!ret.Success)
-                return BadRequest(ret);
+                return BadRequest((APIResponse)ret);
 
-            return Ok(ret);
+            return Ok((APIResponse)ret);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateBook(UpdateBookRequest book)
+        public async Task<ActionResult<APIResponse>> UpdateBook(UpdateBookRequest book)
         {
             ServiceResult ret = await booksService.UpdateBook(book);
 
             if (ret.ExceptionGenerated)
-                return StatusCode(500, ret);
+                return StatusCode(500, (APIResponse)ret);
 
             if (!ret.Success)
-                return BadRequest(ret);
+                return BadRequest((APIResponse)ret);
 
-            return Ok(ret);
+            return Ok((APIResponse)ret);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<ActionResult<APIResponse>> DeleteBook(int id)
         {
             ServiceResult ret = await booksService.DeleteBook(id);
 
             if (ret.ExceptionGenerated)
-                return StatusCode(500, ret);
+                return StatusCode(500, (APIResponse)ret);
 
             if (!ret.Success)
-                return BadRequest(ret);
+                return BadRequest((APIResponse)ret);
 
-            return Ok(ret);
+            return Ok((APIResponse)ret);
         }
 
         //[HttpPost("Return")]

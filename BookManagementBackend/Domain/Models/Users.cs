@@ -4,14 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BookManagementBackend.Domain.Models
 {
     [Table("Users")]
-    public class Users(string email, string firstName, string lastName)
+    public class Users
     {
         [Key]
         public int Id { get; }
-        public string? Password { get; set; };
-        public string Email { get; set; } = email;
-        public string FirstName { get; set; } = firstName;
-        public string LastName { get; set; } = lastName;
+        public required string Password { get; set; }
+        public required string Email { get; set; }
+        public required string FirstName { get; set; }
+        public string? LastName { get; set; }
         public bool IsAdministrator { get; set; } = false;
+        public bool Active { get; set; } = true;
     }
 }
