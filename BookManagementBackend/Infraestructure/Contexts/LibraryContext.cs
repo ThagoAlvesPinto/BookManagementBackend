@@ -7,6 +7,7 @@ namespace BookManagementBackend.Infraestructure.Contexts
     {
         public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
         {
+            Database.Migrate();
         }
 
         public DbSet<Books> Books { get; set; }

@@ -54,7 +54,7 @@ namespace BookManagementBackend.Controllers
             if (!result.Success)
                 return BadRequest((APIResponse)result);
 
-            return Ok((APIResponse)result);
+            return Ok((APIResponse<IEnumerable<Users>>)result);
         }
 
         // POST api/User

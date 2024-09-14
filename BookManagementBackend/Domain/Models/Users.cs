@@ -9,6 +9,7 @@ namespace BookManagementBackend.Domain.Models
     {
         [Key]
         public int Id { get; }
+        [JsonIgnore]
         public required string Password { get; set; }
         public required string Email { get; set; }
         public required string FirstName { get; set; }
