@@ -44,9 +44,9 @@ namespace BookManagementBackend.Controllers
 
         // GET: api/<UserController>
         [HttpGet]
-        public async Task<ActionResult<APIResponse<IEnumerable<Users>>>> GetUsers()
+        public async Task<ActionResult<APIResponse<List<UserResponse>>>> GetUsers()
         {
-            ServiceResult<IEnumerable<Users>> result = await _service.GetAllUsers();
+            ServiceResult<List<UserResponse>> result = await _service.GetAllUsers();
 
             if (result.ExceptionGenerated)
                 return StatusCode(500, (APIResponse)result);
@@ -54,7 +54,7 @@ namespace BookManagementBackend.Controllers
             if (!result.Success)
                 return BadRequest((APIResponse)result);
 
-            return Ok((APIResponse<IEnumerable<Users>>)result);
+            return Ok((APIResponse<List<UserResponse>>)result);
         }
 
         // POST api/User

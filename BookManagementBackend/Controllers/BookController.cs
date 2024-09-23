@@ -35,17 +35,17 @@ namespace BookManagementBackend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<APIResponse<IEnumerable<Books>>>> GetBooks()
+        public async Task<ActionResult<APIResponse<List<Books>>>> GetBooks()
         {
-            ServiceResult<IEnumerable<Books>> result = await booksService.GetBooks();
+            ServiceResult<List<Books>> result = await booksService.GetBooks();
 
             if (result.ExceptionGenerated)
-                return StatusCode(500, (APIResponse<IEnumerable<Books>>)result);
+                return StatusCode(500, (APIResponse<List<Books>>)result);
 
             if (!result.Success)
-                return BadRequest((APIResponse<IEnumerable<Books>>)result);
+                return BadRequest((APIResponse<List<Books>>)result);
 
-            return Ok((APIResponse<IEnumerable<Books>>)result);
+            return Ok((APIResponse<List<Books>>)result);
         }
 
         [HttpGet("External/{isbn}")]

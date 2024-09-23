@@ -76,11 +76,11 @@ namespace BookManagementBackend.Domain.Services
             }            
         }
 
-        public async Task<ServiceResult<IEnumerable<Books>>> GetBooks()
+        public async Task<ServiceResult<List<Books>>> GetBooks()
         {
             try
             {
-                IEnumerable<Books> books = await _booksRepository.GetAllBooks();
+                List<Books> books = await _booksRepository.GetAllBooks();
 
                 return new(books);
             }

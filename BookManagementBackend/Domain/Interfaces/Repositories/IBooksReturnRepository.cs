@@ -6,7 +6,7 @@ namespace BookManagementBackend.Domain.Interfaces.Repositories
     {
         Task AddBookReturn(BooksReturn bookReturn);
         Task DeleteBookReturn(BooksReturn bookReturn);
-        Task<IEnumerable<BooksReturn>> GetAllBooksReturnByBook(int bookId);
+        Task<List<BooksReturn>> GetAllBooksReturnByBook(int bookId);
         Task<BooksReturn?> GetBookReturn(int id);
     }
 }

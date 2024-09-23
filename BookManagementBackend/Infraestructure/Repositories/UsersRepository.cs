@@ -23,7 +23,7 @@ namespace BookManagementBackend.Infraestructure.Repositories
             return await _db.Users.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Users>> GetAllUsers()
+        public async Task<List<Users>> GetAllUsers()
         {
             return await _db.Users.ToListAsync();
         }

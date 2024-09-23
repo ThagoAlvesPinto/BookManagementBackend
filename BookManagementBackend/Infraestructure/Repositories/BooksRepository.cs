@@ -31,7 +31,7 @@ namespace BookManagementBackend.Infraestructure.Repositories
             return await _db.Books.FirstOrDefaultAsync(b => b.Isbn10 == isbn || b.Isbn13 == isbn);
         }
 
-        public async Task<IEnumerable<Books>> GetAllBooks()
+        public async Task<List<Books>> GetAllBooks()
         {
             return await _db.Books.ToListAsync();
         }

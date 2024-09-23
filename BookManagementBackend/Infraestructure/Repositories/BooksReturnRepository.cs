@@ -26,7 +26,7 @@ namespace BookManagementBackend.Infraestructure.Repositories
             return await _db.BooksReturn.FindAsync(id);
         }
 
-        public async Task<IEnumerable<BooksReturn>> GetAllBooksReturnByBook(int bookId)
+        public async Task<List<BooksReturn>> GetAllBooksReturnByBook(int bookId)
         {
             return await _db.BooksReturn
                 .Where(x => x.BookId == bookId)

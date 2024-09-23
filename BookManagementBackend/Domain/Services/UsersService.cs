@@ -4,6 +4,7 @@ using BookManagementBackend.Domain.Interfaces.Repositories;
 using BookManagementBackend.Domain.Interfaces.Services;
 using BookManagementBackend.Domain.Models;
 using BookManagementBackend.Domain.Models.Requests;
+using BookManagementBackend.Domain.Models.Responses;
 
 namespace BookManagementBackend.Domain.Services
 {
@@ -38,11 +39,11 @@ namespace BookManagementBackend.Domain.Services
             }            
         }
 
-        public async Task<ServiceResult<IEnumerable<Users>>> GetAllUsers()
+        public async Task<ServiceResult<List<UserResponse>>> GetAllUsers()
         {
             try
             {
-                IEnumerable<Users> users = await _usersRepository.GetAllUsers();
+                List<UserResponse> users = (await _usersRepository.GetAllUsers()).Select(x => new UserResponse(x)).ToList();
 
                 return new(users);
             }
