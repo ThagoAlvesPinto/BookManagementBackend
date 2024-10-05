@@ -16,5 +16,7 @@ namespace BookManagementBackend.Domain.Models
         public string? LastName { get; set; }
         public bool IsAdministrator { get; set; } = false;
         public bool Active { get; set; } = true;
+
+        public ICollection<BooksReturn>? BooksReturn { get; set; }
     }
 }
