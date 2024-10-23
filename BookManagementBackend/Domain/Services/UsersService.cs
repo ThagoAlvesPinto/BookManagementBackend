@@ -2,6 +2,7 @@
 using BookManagementBackend.Domain.Extensions;
 using BookManagementBackend.Domain.Interfaces.Repositories;
 using BookManagementBackend.Domain.Interfaces.Services;
+using BookManagementBackend.Domain.Interfaces.Services.External;
 using BookManagementBackend.Domain.Models;
 using BookManagementBackend.Domain.Models.Requests;
 using BookManagementBackend.Domain.Models.Responses;
@@ -11,10 +12,12 @@ namespace BookManagementBackend.Domain.Services
     public class UsersService : IUsersService
     {
         private readonly IUsersRepository _usersRepository;
+        private readonly IEmailService _emailService;
 
-        public UsersService(IUsersRepository usersRepository)
+        public UsersService(IUsersRepository usersRepository, IEmailService emailService)
         {
             _usersRepository = usersRepository;
+            _emailService = emailService;
         }
 
         public async Task<ServiceResult<Users>> Login(string email, string password)
@@ -75,6 +78,17 @@ namespace BookManagementBackend.Domain.Services
                     Active = true
                 };
 
+                try
+                {
+                    string corpoEmail = MontaCorpoEmailSenhaTemporaria(user.FirstName, user.Email, temporaryPassword);
+
+                    await _emailService.SendEmail(user.Email, "Cadastro DEVOLUWEB realizado com sucesso!", corpoEmail);
+                }
+                catch (Exception ex)
+                {
+                    return new(false, "Erro ao enviar email para o usuário. \n\n" + ex.GetExceptionMessage(), true);
+                }
+
                 await _usersRepository.AddUser(user);
 
                 return new(true, "Usuário cadastrado com sucesso !");
@@ -83,6 +97,29 @@ namespace BookManagementBackend.Domain.Services
             {
                 return new(false, ex.GetExceptionMessage(), true);
             }
+        }
+
+        private static string MontaCorpoEmailSenhaTemporaria(string nome, string email, string senha)
+        {
+            return $@"<html>
+                        <head>
+                            <style>
+                                body {{
+                                    font-family: Arial, sans-serif;
+                                }}
+                            </style>
+                        </head>
+                        <body>
+                            <h1>Olá, {nome}!</h1>
+                            <p>Seu cadastro no sistema DEVOLUWEB foi realizado com sucesso!</p>
+                            <p>Seus dados de acesso são:</p>
+                            <p><strong>Email:</strong> {email}</p>
+                            <p><strong>Senha:</strong> {senha}</p>
+                            <p>Recomendamos que você altere sua senha no primeiro acesso.</p>
+                            <p>Atenciosamente,</p>
+                            <p>Equipe de suporte</p>
+                        </body>
+                    </html>";
         }
 
         private string GenerateTemporaryPassword()

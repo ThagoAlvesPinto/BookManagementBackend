@@ -12,6 +12,7 @@ namespace BookManagementBackend.Domain.Interfaces.Services
         Task<ServiceResult<Books>> GetBookByIsbn(string isbn);
         Task<ServiceResult<List<Books>>> GetBooks();
         Task<ServiceResult<ExternalBookResponse>> GetExternalBook(string isbn);
+        Task<ServiceResult> ReturnBook(int bookId, int userId);
         Task<ServiceResult> UpdateBook(UpdateBookRequest bookReq);
     }
 }

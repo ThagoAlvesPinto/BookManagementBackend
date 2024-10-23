@@ -81,7 +81,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowEspecificOrigin",
         builder =>
         {
-            builder.WithOrigins("http://127.0.0.1")
+            builder.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });

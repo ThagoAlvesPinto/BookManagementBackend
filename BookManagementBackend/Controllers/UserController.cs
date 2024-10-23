@@ -59,8 +59,17 @@ namespace BookManagementBackend.Controllers
 
         // POST api/User
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<APIResponse>> AddUser([FromBody] AddUserRequest request)
         {
+            ServiceResult result = await _service.AddUser(request);
+
+            if (result.ExceptionGenerated)
+                return StatusCode(500, (APIResponse)result);
+
+            if (!result.Success)
+                return BadRequest((APIResponse)result);
+
+            return Ok((APIResponse)result);
         }
 
         // PUT api/<UserController>/5

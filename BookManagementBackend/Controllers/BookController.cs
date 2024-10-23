@@ -5,6 +5,7 @@ using BookManagementBackend.Domain.Models.Requests;
 using BookManagementBackend.Domain.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookManagementBackend.Controllers
 {
@@ -76,9 +77,11 @@ namespace BookManagementBackend.Controllers
             return Ok((APIResponse)ret);
         }
 
-        [HttpPut]
-        public async Task<ActionResult<APIResponse>> UpdateBook(UpdateBookRequest book)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<APIResponse>> UpdateBook([FromBody] UpdateBookRequest book, [FromQuery] int id)
         {
+            book.Id = id;
+
             ServiceResult ret = await booksService.UpdateBook(book);
 
             if (ret.ExceptionGenerated)
@@ -104,19 +107,20 @@ namespace BookManagementBackend.Controllers
             return Ok((APIResponse)ret);
         }
 
-        //[HttpPost("Return")]
-        //public async Task<IActionResult> ReturnBook(BookReturnRequest request)
-        //{
-        //    var ret = await booksService.ReturnBook(request.BookId, request.ReturnUserName);
+        [HttpPost("Return/{bookId}")]
+        public async Task<IActionResult> ReturnBook(int bookId)
+        {
+            int userId = int.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-        //    if (ret.Item1)
-        //    {
-        //        return Ok("Livro devolvido com sucesso.");
-        //    }
-        //    else
-        //    {
-        //        return BadRequest("Erro ao devolver livro. " + ret.Item2);
-        //    }
-        //}
+            ServiceResult ret = await booksService.ReturnBook(bookId, userId);
+
+            if (ret.ExceptionGenerated)
+                return StatusCode(500, (APIResponse)ret);
+
+            if (!ret.Success)
+                return BadRequest((APIResponse)ret);
+
+            return Ok((APIResponse)ret);
+        }
     }
 }

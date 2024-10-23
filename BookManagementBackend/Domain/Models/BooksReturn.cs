@@ -8,12 +8,12 @@ namespace BookManagementBackend.Domain.Models
     {
         [Key]      
         public int Id { get; }
-        public int BookId { get; set; }
-        public Books? Book { get; set; }
+        public int BookId { get; set; }        
         public DateTime ReturnDate { get; set; }
         public bool ReturnConfirmed { get; set; } = false;
         public int ReturnUserId { get; set; }
 
         public Users? ReturnUser { get; set; }
+        public Books? Book { get; set; }
     }
 }

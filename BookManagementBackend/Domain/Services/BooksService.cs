@@ -133,7 +133,10 @@ namespace BookManagementBackend.Domain.Services
         {
             try
             {
-                Books? book = await _booksRepository.GetBook(bookReq.Id);
+                if (bookReq.Id is null)
+                    return new(false, "Id do livro não informado.");
+
+                Books ? book = await _booksRepository.GetBook(bookReq.Id.Value);
 
                 if (book is null)
                     return new(false, "Livro não encontrado.");
@@ -179,19 +182,25 @@ namespace BookManagementBackend.Domain.Services
             }
         }
 
-        public async Task<(bool,string)> ReturnBook(int bookId, string returnUserName)
+        public async Task<ServiceResult> ReturnBook(int bookId, int userId)
         {
             try
             {
-                //BooksReturn booksReturn = new(bookId, DateTime.Now, returnUserName);
+                BooksReturn booksReturn = new()
+                {
+                    BookId = bookId,
+                    ReturnConfirmed = false,
+                    ReturnDate = DateTime.Now,
+                    ReturnUserId = userId
+                };
 
-                //await _booksReturnRepository.AddBookReturn(booksReturn);
+                await _booksReturnRepository.AddBookReturn(booksReturn);
 
-                return (true,"");
+                return new();
             }
             catch (Exception e)
             {
-                return (false,e.Message + " " + e.InnerException?.Message);
+                return new(false, e.GetExceptionMessage(), true);
             }            
         }        
     }
