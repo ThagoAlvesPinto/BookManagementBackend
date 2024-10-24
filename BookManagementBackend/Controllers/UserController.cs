@@ -57,6 +57,21 @@ namespace BookManagementBackend.Controllers
             return Ok((APIResponse<List<UserResponse>>)result);
         }
 
+        // GET api/<UserController>/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<APIResponse<UserResponse>>> Get(int id)
+        {
+            ServiceResult<UserResponse> result = await _service.GetUser(id);
+
+            if (result.ExceptionGenerated)
+                return StatusCode(500, (APIResponse)result);
+
+            if (!result.Success)
+                return BadRequest((APIResponse)result);
+
+            return Ok((APIResponse<UserResponse>)result);
+        }
+
         // POST api/User
         [HttpPost]
         public async Task<ActionResult<APIResponse>> AddUser([FromBody] AddUserRequest request)
@@ -74,8 +89,47 @@ namespace BookManagementBackend.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult<APIResponse>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
         {
+            ServiceResult result = await _service.UpdateUser(request, id);
+
+            if (result.ExceptionGenerated)
+                return StatusCode(500, (APIResponse)result);
+
+            if (!result.Success)
+                return BadRequest((APIResponse)result);
+
+            return Ok((APIResponse)result);
+        }
+
+        // PUT api/<UserController>/UpdatePassword/5
+        [HttpPut("UpdatePassword/{id}")]
+        public async Task<ActionResult<APIResponse>> UpdatePassword(int id, [FromBody] UpdatePasswordRequest request)
+        {
+            ServiceResult result = await _service.UpdatePassword(request, id);
+
+            if (result.ExceptionGenerated)
+                return StatusCode(500, (APIResponse)result);
+
+            if (!result.Success)
+                return BadRequest((APIResponse)result);
+
+            return Ok((APIResponse)result);
+        }
+
+        // PUT api/<UserController>/DeactivateUser/5
+        [HttpPut("DeactivateUser/{id}")]
+        public async Task<ActionResult<APIResponse>> DeactivateUser(int id)
+        {
+            ServiceResult result = await _service.DeactivateUser(id);
+
+            if (result.ExceptionGenerated)
+                return StatusCode(500, (APIResponse)result);
+
+            if (!result.Success)
+                return BadRequest((APIResponse)result);
+
+            return Ok((APIResponse)result);
         }
     }
 }

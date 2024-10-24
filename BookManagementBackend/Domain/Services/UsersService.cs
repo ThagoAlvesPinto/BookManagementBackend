@@ -29,6 +29,9 @@ namespace BookManagementBackend.Domain.Services
                 if (user is null)
                     return new(false, "Usuário não encontrado!");
 
+                if (!user.Active)
+                    return new(false, "Usuário desativado!");
+
                 bool passwordCheck = BCrypt.Net.BCrypt.Verify(password, user.Password);
 
                 if (!passwordCheck)
@@ -39,7 +42,7 @@ namespace BookManagementBackend.Domain.Services
             catch (Exception ex)
             {
                 return new(false, ex.GetExceptionMessage(), true);
-            }            
+            }
         }
 
         public async Task<ServiceResult<List<UserResponse>>> GetAllUsers()
@@ -53,13 +56,32 @@ namespace BookManagementBackend.Domain.Services
             catch (Exception ex)
             {
                 return new(false, ex.GetExceptionMessage(), true);
-            }            
+            }
+        }
+
+        public async Task<ServiceResult<UserResponse>> GetUser(int userId)
+        {
+            try
+            {
+                Users? user = await _usersRepository.GetUser(userId);
+
+                if (user is null)
+                    return new(false, "Usuário não encontrado!");
+
+                UserResponse userResponse = new(user);
+
+                return new(userResponse);
+            }
+            catch (Exception ex)
+            {
+                return new(false, ex.GetExceptionMessage(), true);
+            }
         }
 
         public async Task<ServiceResult> AddUser(AddUserRequest userRequest)
         {
 
-           try
+            try
             {
                 Users? user = await _usersRepository.GetUser(userRequest.Email);
 
@@ -92,6 +114,81 @@ namespace BookManagementBackend.Domain.Services
                 await _usersRepository.AddUser(user);
 
                 return new(true, "Usuário cadastrado com sucesso !");
+            }
+            catch (Exception ex)
+            {
+                return new(false, ex.GetExceptionMessage(), true);
+            }
+        }
+
+        public async Task<ServiceResult> UpdateUser(UpdateUserRequest request, int userId)
+        {
+            try
+            {
+                Users? user = await _usersRepository.GetUser(userId);
+
+                if (user is null)
+                    return new(false, "Usuário não encontrado!");
+
+                if (request.FirstName is not null)
+                    user.FirstName = request.FirstName;
+
+                if (request.LastName is not null)
+                    user.LastName = request.LastName;
+
+                if (request.Email is not null)
+                    user.Email = request.Email;
+
+                await _usersRepository.UpdateUser(user);
+
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return new(false, ex.GetExceptionMessage(), true);
+            }
+        }
+
+        public async Task<ServiceResult> UpdatePassword(UpdatePasswordRequest request, int userId)
+        {
+            try
+            {
+                Users? user = await _usersRepository.GetUser(userId);
+
+                if (user is null)
+                    return new(false, "Usuário não encontrado!");
+
+                bool passwordCheck = BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password);
+
+                if (!passwordCheck)
+                    return new(false, "Senha antiga incorreta!");
+
+                user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+                await _usersRepository.UpdateUser(user);
+
+                return new();
+            }
+            catch (Exception ex)
+            {
+                return new(false, ex.GetExceptionMessage(), true);
+            }
+        }
+
+        public async Task<ServiceResult> DeactivateUser(int userId)
+        {
+            try
+            {
+                Users? user = await _usersRepository.GetUser(userId);
+
+                if (user is null)
+                    return new(false, "Usuário não encontrado!");
+
+                user.Active = false;
+
+                await _usersRepository.UpdateUser(user);
+
+                return new();
             }
             catch (Exception ex)
             {

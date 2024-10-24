@@ -1,7 +1,8 @@
 ﻿using BookManagementBackend.Classes;
 using BookManagementBackend.Domain.Interfaces.Services.External;
 using Microsoft.Extensions.Options;
-using System.Net.Mail;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace BookManagementBackend.Domain.Services.External
 {
@@ -9,28 +10,31 @@ namespace BookManagementBackend.Domain.Services.External
     {
         private readonly AppSettings _settings;
 
-        public EmailService(IOptions<AppSettings> options) 
+        public EmailService(IOptions<AppSettings> options)
         {
             _settings = options.Value;
         }
 
-        public Task SendEmail(string to, string subject, string body)
+        public async Task SendEmail(string to, string subject, string body)
         {
-            SmtpClient client = new(_settings.SMTPServer, _settings.SMTPPort)
+            string apiKey = _settings.SendGridKey;
+
+            SendGridClient client = new(apiKey);
+
+            SendGridMessage msg = new()
             {
-                Credentials = new System.Net.NetworkCredential(_settings.Email, _settings.Password),
-                EnableSsl = _settings.EnableSSL               
+                From = new EmailAddress("projetointegrador2grupo18@outlook.com", "DEVOLUWEB"),
+                
+                HtmlContent = body,
+                Subject = subject
             };
 
-            MailMessage mail = new(_settings.Email, to)
-            {
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true,
-                Sender = new(_settings.Email, _settings.EmailDisplayName)
-            };
+            msg.AddTo(new EmailAddress(to));
 
-            return client.SendMailAsync(mail);
+            Response response = await client.SendEmailAsync(msg);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception(await response.Body.ReadAsStringAsync());
         }
     }
 }

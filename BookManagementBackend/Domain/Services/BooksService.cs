@@ -141,17 +141,17 @@ namespace BookManagementBackend.Domain.Services
                 if (book is null)
                     return new(false, "Livro não encontrado.");
 
-                book.Author = bookReq.Author;
-                book.Description = bookReq.Description;
-                book.Genre = bookReq.Genre;
-                book.ImageLink = bookReq.ImageLink;
-                book.Isbn10 = bookReq.Isbn10;
-                book.Isbn13 = bookReq.Isbn13;
-                book.Language = bookReq.Language;
-                book.Pages = bookReq.Pages;
-                book.PublishedDate = bookReq.PublishedDate;
-                book.Publisher = bookReq.Publisher;
-                book.Title = bookReq.Title;
+                book.Author = bookReq.Author ?? book.Author;
+                book.Description = bookReq.Description ?? book.Description;
+                book.Genre = bookReq.Genre ?? book.Genre;
+                book.ImageLink = bookReq.ImageLink ?? book.ImageLink;
+                book.Isbn10 = bookReq.Isbn10 ?? book.Isbn10;
+                book.Isbn13 = bookReq.Isbn13 ?? book.Isbn13;
+                book.Language = bookReq.Language ?? book.Language;
+                book.Pages = bookReq.Pages ?? book.Pages;
+                book.PublishedDate = bookReq.PublishedDate ?? book.PublishedDate;
+                book.Publisher = bookReq.Publisher ?? book.Publisher;
+                book.Title = bookReq.Title ?? book.Title;
 
                 await _booksRepository.UpdateBook(book);
 
